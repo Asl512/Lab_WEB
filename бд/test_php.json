@@ -1,0 +1,65 @@
+[
+{"type":"header","version":"5.0.2","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"test_php"},
+{"type":"table","name":"category","database":"test_php","data":
+[
+{"id":"1","name":"Деловые\/Бизнес-процессы","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"2","name":"Деловые\/Найм","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"3","name":"Деловые\/Реклама","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"4","name":"Деловые\/Управление бизнесом","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"5","name":"Деловые\/Управление людьми","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"6","name":"Деловые\/Управление проектами","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"7","name":"Детские\/Воспитание","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"8","name":"Дизайн\/Общее","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"9","name":"Дизайн\/Logo","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"10","name":"Дизайн\/Web дизайн","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"11","name":"Разработка\/PHP","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"12","name":"Разработка\/HTML и CSS","created_at":"0000-00-00","updated_at":"0000-00-00"},
+{"id":"13","name":"Разработка\/Проектирование","created_at":"0000-00-00","updated_at":"0000-00-00"}
+]
+}
+,{"type":"table","name":"links","database":"test_php","data":
+[
+{"id":"2","fk_id_material":"1","name":"Поиск в google","link":"https:\/\/www.google.com\/search?client=opera&q=путь+джедая&sourceid=opera&ie=UTF-8&oe=UTF-8","created_at":"2021-07-01","updated_at":"2021-07-01"}
+]
+}
+,{"type":"table","name":"material","database":"test_php","data":
+[
+{"id":"1","name":"Путь джедая","fk_id_type":"1","fk_id_category":"5","autors":"Максим Дорофеев","description":"Почитать стоит для личного роста","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"6","name":"Как повысить доход","fk_id_type":"2","fk_id_category":"1","autors":"Марк Тишман","description":"Научитесь зарабатывать деньги","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"7","name":"Воспитание ребенка","fk_id_type":"1","fk_id_category":"7","autors":"Мария Кузнецова","description":"Воспитание ребенка от года до 5 лет","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"8","name":"Как кормить ребенка","fk_id_type":"3","fk_id_category":"7","autors":"Мария Кузнецова","description":"В этом видео я научу вас кормить ребенка","created_at":"2021-07-01","updated_at":"2021-07-01"}
+]
+}
+,{"type":"table","name":"teg","database":"test_php","data":
+[
+{"id":"3","name":"Продуктивность","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"4","name":"Личная эффективность","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"7","name":"Ребенок","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"8","name":"Воспитание","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"9","name":"Финансы","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"10","name":"Деньги","created_at":"2021-07-01","updated_at":"2021-07-01"}
+]
+}
+,{"type":"table","name":"tegs_material","database":"test_php","data":
+[
+{"id":"1","fk_id_teg":"3","fk_id_material":"1","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"8","fk_id_teg":"4","fk_id_material":"1","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"9","fk_id_teg":"9","fk_id_material":"6","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"10","fk_id_teg":"10","fk_id_material":"6","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"11","fk_id_teg":"8","fk_id_material":"7","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"12","fk_id_teg":"7","fk_id_material":"7","created_at":"2021-07-01","updated_at":"2021-07-01"},
+{"id":"13","fk_id_teg":"7","fk_id_material":"8","created_at":"2021-07-01","updated_at":"2021-07-01"}
+]
+}
+,{"type":"table","name":"type","database":"test_php","data":
+[
+{"id":"1","name":"Книга"},
+{"id":"2","name":"Статья"},
+{"id":"3","name":"Видео"},
+{"id":"4","name":"Сайт\/Блог"},
+{"id":"5","name":"Подборка"},
+{"id":"6","name":"Ключевые идеи книги"}
+]
+}
+]
