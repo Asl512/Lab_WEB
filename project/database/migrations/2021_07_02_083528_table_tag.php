@@ -14,8 +14,8 @@ class TableTag extends Migration
     public function up()
     {
         Schema::create('teg', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->id('id_teg');
+            $table->string('name_teg', 1000);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

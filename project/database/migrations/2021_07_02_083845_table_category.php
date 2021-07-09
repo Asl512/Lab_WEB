@@ -14,8 +14,8 @@ class TableCategory extends Migration
     public function up()
     {
         Schema::create('category', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->id('id_category');
+            $table->string('name_category',1000);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

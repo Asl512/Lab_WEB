@@ -14,10 +14,10 @@ class TableLinks extends Migration
     public function up()
     {
         Schema::create('links', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->id('id_link');
+            $table->string('name_link',1000)->default('-');
             $table->integer('fk_id_material');
-            $table->string('link');
+            $table->string('link',10000);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

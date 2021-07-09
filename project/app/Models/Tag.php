@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     protected $table = 'teg';
-    protected $fillable = ['id','name'];
+    protected $fillable = ['name_teg'];
+    protected $primaryKey = 'id_teg';
 }
