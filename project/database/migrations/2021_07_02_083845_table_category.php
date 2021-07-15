@@ -15,7 +15,7 @@ class TableCategory extends Migration
     {
         Schema::create('category', function (Blueprint $table) {
             $table->id('id_category');
-            $table->string('name_category',1000);
+            $table->string('name_category', 1000);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Tag;
 use App\Models\Materials;
 use App\Models\Links;
@@ -10,120 +11,75 @@ use Illuminate\Validation\Rule;
 
 class ViewController extends Controller
 {
-    public function View()
+    public function view()
     {
-        if(isset($_GET['id']))
-        {
-            $material = Materials::select()->where('id_material',$_GET['id'])->join('category', 'material.fk_id_category', '=', 'category.id_category')->first();
-            if(!$material)
-            {
+        if (isset($_GET['id'])) {
+            $material = Materials::where('id_material', $_GET['id'])->join('category', 'material.fk_id_category', '=', 'category.id_category')->first();
+            if (!$material) {
                 return redirect('/');
-            }
-            else
-            {
-                $tags =Tag::get();
-                $tags_material = Tag::join('tegs_material','teg.id_teg','=','tegs_material.fk_id_teg')->where('tegs_material.fk_id_material',$material->id_material)->get();
-                $links = Links::select()->where('fk_id_material',$material->id_material)->get();
+            } else {
+                $tags = Tag::get();
+                $tags_material = Tag::join('tegs_material', 'teg.id_teg', '=', 'tegs_material.fk_id_teg')->where('tegs_material.fk_id_material', $material->id_material)->get();
+                $links = Links::select()->where('fk_id_material', $material->id_material)->get();
 
-                return view('view-material')-> with(['links'=>$links,'material'=>$material,'tags_material'=>$tags_material,'tags'=>$tags,]);
+                return view('view-material')->with(['links' => $links, 'material' => $material, 'tags_material' => $tags_material, 'tags' => $tags,]);
             }
-        }
-        else
-        {
+        } else {
             return redirect('/');
         }
     }
 
-    public function AddTagMaterial(Request $request, $id)
+    public function addTagMaterial(Request $request, $id_material)
     {
-        $request->validate(['tag' => ['required','not_in:0',Rule::unique('tegs_material','fk_id_teg')->where('fk_id_material',$id)]]);
+        $request->validate(['tag' => ['required', 'not_in:0', Rule::unique('tegs_material', 'fk_id_teg')->where('fk_id_material', $id_material)]]);
 
-        $data = ['fk_id_teg' => $request->tag,
-                'fk_id_material' => $id];
+        $data = [
+            'fk_id_teg' => $request->tag,
+            'fk_id_material' => $id_material
+        ];
         Tegs_material::create($data);
-    
-        return redirect('view-material?id='.$id);
+
+        return redirect('view-material?id=' . $id_material);
     }
 
-    public function DeleteTagMaterial(Tegs_material $id)
+    public function deleteTagMaterial(Tegs_material $tag_material)
     {
-        $id->delete();
-        return redirect('view-material?id='.$id->fk_id_material);
+        $tag_material->delete();
+        return redirect('view-material?id=' . $tag_material->fk_id_material);
     }
 
-
-    public function CreateLink()
+    public function addlink(Request $request, $id_material)
     {
-        if(isset($_GET['id']))
-        {
-            $material = Materials::where('id_material',$_GET['id'])->first();
-            if(!$material)
-            {
-                return redirect('/');
-            }
-            else
-            {
-                return view('create-link')->with(['material'=>$material]);
-            }
-        }
-        else
-        {
-            return redirect('/');
-        }
-    }
+        $request->validate(['link' => ['required', Rule::unique('links', 'link')->where('fk_id_material', $id_material)]]);
 
-    public function Addlink(Request $request,$id)
-    {
-        $request->validate(['link' => ['required',Rule::unique('links','link')->where('fk_id_material',$id)]]);
-
-        $data = ['link' => $request->link,
-                'fk_id_material' => $id];
-        if($request->name != '')
-        {
+        $data = [
+            'link' => $request->link,
+            'fk_id_material' => $id_material
+        ];
+        if (!empty($request->name)) {
             $data['name_link'] = $request->name;
         }
         Links::create($data);
 
-        return redirect('view-material?id='.$id);
+        return redirect('view-material?id=' . $id_material);
     }
 
-    public function UpdateLink()
+    public function saveLink(Request $request, Links $link)
     {
-        if(isset($_GET['id']))
-        {
-            $link = Links::where('id_link',$_GET['id'])->first();
-            if(!$link)
-            {
-                return redirect('/');
-            }
-            else
-            {
-                return view('update-link')->with(['link'=>$link]);
-            }
-        }
-        else
-        {
-            return redirect('/');
-        }
-    }
+        $request->validate(['link' => ['required', Rule::unique('links', 'link')->where('fk_id_material', $link->fk_id_material)->ignore($link->id_link, 'id_link')]]);
 
-    public function SaveLink(Request $request,Links $link)
-    {
-        $request->validate(['link' => ['required',Rule::unique('links','link')->where('fk_id_material',$link->fk_id_material)->ignore($link->id_link,'id_link')]]);
-        
-        if($request->input('name') != '')
-        {
-            $link -> name_link = $request->input('name');
+        if (!empty($request->input('name'))) {
+            $link->name_link = $request->input('name');
         }
-        $link -> link = $request->input('link');
+        $link->link = $request->input('link');
         $link->save();
 
-        return redirect('view-material?id='.$link->fk_id_material);
+        return redirect('view-material?id=' . $link->fk_id_material);
     }
 
-    public function DeleteLinkMaterial(Links $id)
+    public function deleteLinkMaterial(Links $link)
     {
-        $id->delete();
-        return redirect('view-material?id='.$id->fk_id_material);
+        $link->delete();
+        return redirect('view-material?id=' . $link->fk_id_material);
     }
 }

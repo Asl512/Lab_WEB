@@ -15,9 +15,9 @@ class TableLinks extends Migration
     {
         Schema::create('links', function (Blueprint $table) {
             $table->id('id_link');
-            $table->string('name_link',1000)->default('-');
+            $table->string('name_link', 1000)->default('-');
             $table->integer('fk_id_material');
-            $table->string('link',10000);
+            $table->string('link', 10000);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

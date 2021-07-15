@@ -1,32 +1,33 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Tag;
 use App\Models\Tegs_material;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
-    public function Tag()
+    public function tag()
     {
         $tags = Tag::get();
-        return view('tag')-> with(['tags'=>$tags]);
+        return view('tag')->with(['tags' => $tags]);
     }
 
-    public function Delete_Tag(Tag $tag)
+    public function deleteTag(Tag $tag)
     {
+        //удаляет данный тег во всех материалах
         $tags_material = Tegs_material::select()->where('fk_id_teg', $tag->id_teg)->get();
-        foreach($tags_material as $tags_material)//удаляет данный тег во всех материалах
-        {
+        foreach ($tags_material as $tags_material) {
             $tags_material->delete();
         }
 
         $tag->delete();
-        
+
         return redirect('tag');
     }
 
-    public function CreateTag(Request $request)
+    public function createTag(Request $request)
     {
         $request->validate(['name' => 'required|unique:teg,name_teg']);
 
@@ -36,33 +37,26 @@ class TagController extends Controller
         return redirect('tag');
     }
 
-    public function UpdateTag()
+    public function updateTag()
     {
-        if(isset($_GET['id']))
-        {
-            $tag = Tag::select()->where('id_teg',$_GET['id'])->first();
-            if(!$tag)
-            {
+        if (isset($_GET['id'])) {
+            $tag = Tag::select()->where('id_teg', $_GET['id'])->first();
+            if (!$tag) {
                 return redirect('tag');
+            } else {
+                return view('update-teg')->with(['tag' => $tag]);
             }
-            else
-            {
-                return view('update-teg')-> with(['tag'=>$tag]);
-            }
-        }
-        else
-        {
+        } else {
             return redirect('tag');
         }
     }
 
-    public function SaveTag(Request $request,$id)
+    public function saveTag(Request $request, Tag $tag)
     {
-        $request->validate(['name' => 'required|unique:teg,name_teg,'.$id.',id_teg']);
+        $request->validate(['name' => 'required|unique:teg,name_teg,' . $tag->id_teg . ',id_teg']);
 
-        $teg = Tag::find($id);
-        $teg -> name_teg = $request->input('name');
-        $teg->save();
+        $tag->name_teg = $request->input('name');
+        $tag->save();
 
         return redirect('tag');
     }

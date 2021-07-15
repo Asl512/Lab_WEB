@@ -13,14 +13,13 @@ class TableMaterial extends Migration
      */
     public function up()
     {
-        Schema::create('material', function (Blueprint $table) 
-        {
+        Schema::create('material', function (Blueprint $table) {
             $table->id('id_material');
-            $table->string('name_material',1000);
-            $table->string('type',1000);
+            $table->string('name_material', 1000);
+            $table->string('type', 1000);
             $table->integer('fk_id_category');
-            $table->string('autors',1000)->default('-');
-            $table->string('description',10000)->default('-');
+            $table->string('autors', 1000)->default('-');
+            $table->string('description', 10000)->default('-');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });
