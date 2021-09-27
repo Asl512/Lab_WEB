@@ -1,0 +1,51 @@
+функция средний балл студента
+
+CREATE OR REPLACE FUNCTION average(name_st varchar,surname_st varchar)
+RETURNS bigint AS $$
+SELECT SUM(students_exam.appraisal)/COUNT(students_exam.appraisal)
+FROM students, students_exam
+WHERE students.id = students_exam.fk_id_student
+AND students.name LIKE name_st AND students.surname LIKE surname_st
+GROUP BY students.name, students.surname
+$$ LANGUAGE SQL;
+
+вывод студентов из группы
+
+CREATE OR REPLACE FUNCTION get_students_group(name_group varchar,OUT name_student varchar,OUT surname_student varchar)
+RETURNS SETOF RECORD AS $$
+SELECT students.name, students.surname
+FROM students
+INNER JOIN groups ON students.fk_id_group = groups.id
+WHERE groups.name = name_group
+$$ LANGUAGE SQL;
+
+SELECT name_student, surname_student
+FROM get_students_group('ИСиТ')
+
+вывод преподавателей по кафедре
+
+CREATE OR REPLACE FUNCTION get_teacher_chair(name_chair varchar,OUT name_teacher varchar,OUT surname_teacher varchar)
+RETURNS SETOF RECORD AS $$
+SELECT teacher.name, teacher.surname
+FROM teacher
+INNER JOIN chair ON teacher.fk_id_chair = chair.id
+WHERE chair.name = name_chair
+$$ LANGUAGE SQL;
+
+SELECT name_teacher, surname_teacher
+FROM get_teacher_chair('Кафедра математики')
+
+вывод преподавателей и их предметы по кафедре
+
+CREATE OR REPLACE FUNCTION get_teacher_exam(name_chair varchar,OUT name_teacher varchar,OUT surname_teacher varchar,OUT exam_name varchar)
+RETURNS SETOF RECORD AS $$
+SELECT teacher.name, teacher.surname, exam.name_exam
+FROM exam_teacher
+INNER JOIN teacher ON exam_teacher.fk_id_exam = teacher.id
+INNER JOIN exam ON exam_teacher.fk_id_student = exam.id
+INNER JOIN chair ON teacher.fk_id_chair = chair.id
+WHERE chair.name = name_chair
+$$ LANGUAGE SQL;
+
+SELECT name_teacher, surname_teacher, exam_name
+FROM get_teacher_exam('Кафедра математики')

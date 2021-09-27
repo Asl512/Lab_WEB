@@ -1,0 +1,39 @@
+CTE
+
+WITH group_name AS
+(
+	SELECT id FROM groups WHERE name = 'ИСиТ'
+)
+SELECT name, surname
+FROM students
+WHERE fk_id_group IN (SELECT * FROM group_name)
+
+--------------------------------------------------------------------------------------------------
+
+WITH avg_app AS
+(
+	SELECT students_exam.fk_id_student
+	FROM students, students_exam
+	WHERE students.id = students_exam.fk_id_student
+	GROUP BY students_exam.fk_id_student
+	HAVING SUM(students_exam.appraisal)/COUNT(students_exam.appraisal) >= 4
+)
+SELECT name, surname
+FROM students
+WHERE id IN (SELECT * FROM avg_app)
+
+--------------------------------------------------------------------------------------------------
+
+WITH chosen_date AS
+(
+	SELECT id 
+	FROM exam 
+	WHERE date BETWEEN '2021-03-20' AND '2021-03-27'
+)
+SELECT students.name, students.surname
+FROM students, students_exam
+WHERE students_exam.fk_id_exam IN (SELECT * FROM chosen_date )
+AND students_exam.fk_id_student = students.id
+GROUP BY students.name, students.surname
+
+

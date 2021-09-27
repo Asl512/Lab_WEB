@@ -1,0 +1,24 @@
+.images
+{
+    width: 150px;
+    height: 150px;
+    margin-right: 20px;
+}
+.dis
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.button_rigth
+{
+    display: block;
+    float:right;
+    margin-left: 10px;
+}
+
+.dsd
+{
+    font-size: 10px;
+}
+

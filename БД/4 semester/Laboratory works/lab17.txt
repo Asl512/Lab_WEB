@@ -1,0 +1,28 @@
+SELECT *
+FROM exam
+WHERE id IN
+(SELECT DISTINCT fk_id_exam FROM exam_teacher WHERE fk_id_teacher = 1)
+
+
+BEGIN;
+	UPDATE exam 
+	SET date = date + 1 
+	WHERE id IN
+	(SELECT DISTINCT fk_id_exam FROM exam_teacher WHERE fk_id_teacher = 1)
+	
+ROLLBACK
+COMMIT
+
+-------------------------------------------------------------------------------------------
+
+SELECT * 
+FROM groups
+
+BEGIN;
+	UPDATE groups 
+	SET course = course + 1 
+	WHERE name = 'ИСиТ';
+SAVEPOINT one_save;
+	UPDATE groups 
+	SET course = course + 1 
+	WHERE name = 'ПИ'

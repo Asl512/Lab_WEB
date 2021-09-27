@@ -1,0 +1,41 @@
+вид студентов с группами
+
+CREATE VIEW view_students_groups AS
+SELECT students.name, students.surname, groups.name as name_group
+FROM students
+INNER JOIN groups ON students.fk_id_group = groups.id
+
+SELECT *
+FROM view_students_groups
+
+вид преподавателей с кафедрами
+
+CREATE VIEW view_teacher_chair AS
+SELECT teacher.name, teacher.surname,  chair.name as chair_name
+FROM teacher
+INNER JOIN chair ON teacher.fk_id_chair = chair.id
+
+SELECT *
+FROM view_teacher_chair 
+
+вид студентов и их экзаменов
+
+CREATE VIEW view_students_exam AS
+SELECT students.name, students.surname, exam.name_exam, exam.date
+FROM students_exam
+INNER JOIN exam ON students_exam.fk_id_exam = exam.id
+INNER JOIN students ON students_exam.fk_id_student = students.id
+
+SELECT *
+FROM view_students_exam 
+
+вид преподаватели и их предмет
+
+CREATE VIEW view_teacher_exam AS
+SELECT teacher.name, teacher.surname, exam.name_exam
+FROM exam_teacher
+INNER JOIN teacher ON exam_teacher.fk_id_exam = teacher.id
+INNER JOIN exam ON exam_teacher.fk_id_student = exam.id
+
+SELECT *
+FROM view_teacher_exam 

@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+
+DROP TABLE groups
+
+CREATE TABLE groups
+(
+id_group integer PRIMARY KEY NOT NULL,
+	name_group varchar (200) UNIQUE NOT NULL
+)
+
+INSERT INTO groups
+VALUES
+(1, 'Информационные системы и технологии'),
+(2, 'Информационные системы и технологии')
+
+------------------------------------------------------------------
+
+DROP TABLE students
+
+CREATE TABLE students
+(
+id_student integer PRIMARY KEY NOT NULL,
+	name_student varchar (200) NOT NULL,
+	surname_student varchar (200) NOT NULL,
+	id_group integer NOT NULL,
+	CONSTRAINT fk_id_group FOREIGN KEY (id_group) REFERENCES groups (id_group)
+)
+
+INSERT INTO students
+VALUES
+(1,'Иван', 'Иванов',1),
+(2,'Алина','Афанасьева',2),
+(3,'Михаил', 'Зверев',3)
+
+------------------------------------------------------------------
+
+DROP TABLE students_exam
+
+CREATE TABLE students_exam
+(
+id_record integer PRIMARY KEY NOT NULL,
+	id_stud integer NOT NULL,
+	id_exa integer NOT NULL,
+	CONSTRAINT fk_id_student FOREIGN KEY (id_stud) REFERENCES students (id_student),
+	CONSTRAINT fk_id_exam FOREIGN KEY (id_exa) REFERENCES exam (id)
+)
+
+ALTER TABLE students_exam
+ADD COLUMN appraisal int CONSTRAINT check_appraisal CHECK (appraisal <= 5) CHECK (appraisal >= 2)
+
+INSERT INTO students_exam
+VALUES
+(1,1,1,5),
+(2,2,1,3),
+(3,3,2,10)
+

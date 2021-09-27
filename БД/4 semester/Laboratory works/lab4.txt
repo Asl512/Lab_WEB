@@ -1,0 +1,29 @@
+вывод студентов группы 
+
+SELECT name, surname
+FROM students
+WHERE fk_id_group IN (SELECT DISTINCT id FROM groups WHERE name = 'ИСиТ')
+
+экзамены у студентов в определенный срок
+
+SELECT students.name, students.surname
+FROM students, students_exam
+WHERE students_exam.fk_id_exam IN (SELECT DISTINCT id FROM exam WHERE date BETWEEN '2021-03-20' AND '2021-03-27')
+AND students_exam.fk_id_student = students.id
+GROUP BY students.name, students.surname
+
+SELECT teacher.name, teacher.surname
+FROM teacher, exam_teacher
+WHERE exam_teacher.fk_id_exam IN (SELECT DISTINCT id FROM exam WHERE date BETWEEN '2021-03-20' AND '2021-03-27')
+AND exam_teacher.fk_id_student = teacher.id
+GROUP BY teacher.name, teacher.surname
+
+вывод студентов со средним боллом
+
+SELECT name, surname
+FROM students
+WHERE id IN (SELECT students_exam.fk_id_student
+			 FROM students, students_exam
+			 WHERE students.id = students_exam.fk_id_student
+			 GROUP BY students_exam.fk_id_student
+			 HAVING SUM(students_exam.appraisal)/COUNT(students_exam.appraisal) >= 4)

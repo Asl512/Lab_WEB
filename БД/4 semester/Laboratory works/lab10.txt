@@ -1,0 +1,28 @@
+Индексы
+
+CREATE INDEX students_FIO ON students(name, surname)
+EXPLAIN
+SELECT name, surname
+FROM students
+
+------------------------------------------------------------------------------------
+
+CREATE INDEX one_for_st ON students(fk_id_group, name)
+CREATE INDEX one_for_gr ON groups(id, name)
+
+EXPLAIN
+SELECT groups.name, count(students.name)
+FROM groups, students
+WHERE groups.id = students.fk_id_group
+GROUP BY groups.name
+
+------------------------------------------------------------------------------------
+
+CREATE INDEX two_for_te ON teacher(fk_id_chair, name)
+CREATE INDEX two_for_ch ON chair(id name)
+
+EXPLAIN
+SELECT chair.name, count(teacher.name)
+FROM chair, teacher
+WHERE chair.id = teacher.fk_id_chair
+GROUP BY chair.name

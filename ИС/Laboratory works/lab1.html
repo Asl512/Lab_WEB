@@ -1,0 +1,147 @@
+<html>
+<head>
+    <title>
+        ЛР № 1
+    </title>
+</head>
+<body>
+    <p>Количество</p>
+    <input type = "text" id = 'numb_discharges'>
+    <input type = 'button' onclick = "numb()" value= "Отправить">
+    <div id = 'block'>
+    </div>
+    <div id = 'out'>
+    </div>
+
+    <script>
+        function numb()
+        {
+            var numb_discharges = document.getElementById('numb_discharges').value;
+
+            if(numb_discharges == '')
+            {
+                alert('Введите колличество');
+            }
+            else if(isNaN(numb_discharges))
+            {
+                alert('Введите число в колличество');
+            }
+            else
+            {
+                numb_discharges = Number(numb_discharges);
+                var blocks = '';
+                for (var i = 1; i<= numb_discharges; i++)
+                {
+                    blocks += "<p>Значение "+i+"   &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Вероятность "+i+"</p><input type = 'text' id = 'name_obj_"+i+"'><input type = 'text' id = 'P_"+i+"'>";
+                }
+                blocks += "<br><br><input type = 'button' onclick = 'out("+numb_discharges+")' value = 'Расчитать'>";
+                document.getElementById('block').innerHTML = blocks;
+            }
+        }
+
+        function out(numb)
+        {
+            var mass_name = Array(); 
+            var mass_P = Array(); 
+            var error = 0;
+            for(var i = 1; i <= numb; i++) 
+            {
+                if(document.getElementById("name_obj_"+i).value == '')
+                {
+                    error = 1;
+                    var er_in = i;
+                    break;
+                }
+                else if (document.getElementById("P_"+i).value == '')
+                {
+                    error = 2;
+                    var er_in = i;
+                    break;
+                }
+
+                if (isNaN(document.getElementById("P_"+i).value))
+                {
+                    var mass_num = document.getElementById("P_"+i).value.split('/');
+                    var count_n = mass_num[0];
+                    for(var j = 0; j < mass_num.length; j++)
+                    {
+                        if((isNaN(mass_num[j]))||(mass_num[j] == ''))
+                        {
+                            error = 3;
+                            var er_in = i;
+                            break;
+                        }
+                        else
+                        {
+                            if(j != 0)
+                            {
+                                count_n = count_n / Number(mass_num[j]);
+                            }
+                        }
+                    }
+                    var P_i = count_n;
+                }
+                else
+                {
+                    var P_i = Number(document.getElementById("P_"+i).value);
+                }
+
+                if((P_i < 0)||(P_i > 1))
+                {
+                    error = 4;
+                    var er_in = i;
+                    break;
+                }
+
+                mass_name.push(document.getElementById("name_obj_"+i).value);
+                if(P_i != 0)
+                {
+                    mass_P.push(P_i);
+                }
+            }
+
+            switch(error)
+            {
+                case 1:
+                    alert ('Вы пропустили значение '+er_in);
+                    break;
+                
+                case 2:
+                    alert ('Вы пропустили вероятность '+er_in);
+                    break;
+
+                case 3:
+                    alert ('Вероятноть '+er_in+' должна быть числом');
+                    break;
+
+                case 4:
+                    alert ('Вероятноть '+er_in+' должна быть не меньше 0 и не больше 1');
+                    break;
+                
+                default:
+                    var Sum_P = 0;
+                    for(var i = 0; i < mass_P.length; i++)
+                    {
+                        Sum_P += mass_P[i];
+                    } 
+                    if(Sum_P != 1)
+                    {
+                        alert('Сумма вероятностей должна быть равна 1');
+                        break;
+                    }
+                    else
+                    {
+                        var H = 0;
+                        var Out = "H(X) = ";
+                        for(var i = 0; i < mass_P.length; i++)
+                        {
+                            H += mass_P[i] * Math.log2(mass_P[i]);
+                        }
+                        Out += '<b>'+H * (-1)+'</b>';
+                        document.getElementById('out').innerHTML = '<p>'+Out+'</p>';
+                    }
+            }
+        }
+    </script>
+</body>
+</html>

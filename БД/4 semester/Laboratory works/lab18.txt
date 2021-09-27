@@ -1,0 +1,79 @@
+ALTER TABLE groups ADD count_stud INT  NULL;
+
+UPDATE groups SET count_stud = 4 WHERE id = 1;
+UPDATE groups SET count_stud = 2 WHERE id = 2;
+UPDATE groups SET count_stud = 3 WHERE id = 3
+
+CREATE OR REPLACE FUNCTION for_trigger_one()
+RETURNS TRIGGER AS $$
+BEGIN
+	UPDATE groups SET count_stud = count_stud + 1 WHERE id = NEW.fk_id_group;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER create_stud AFTER INSERT ON students
+	FOR EACH ROW
+	EXECUTE PROCEDURE for_trigger_one();
+	
+INSERT INTO students
+VALUES 
+(10, 'Ольга', 'Милонова', 2)
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION for_trigger_two()
+RETURNS TRIGGER AS $$
+BEGIN
+	UPDATE groups SET count_stud = count_stud - 1 WHERE id = OLD.fk_id_group;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_stud AFTER DELETE ON students
+	FOR EACH ROW
+	EXECUTE PROCEDURE for_trigger_two();
+	
+DELETE FROM students
+WHERE id = 10
+
+-------------------------------------
+
+CREATE TABLE audit
+(
+	op char(1) NOT NULL,
+	user_changed text NOT NULL,
+	time_stamp timestamp NOT NULL,
+	
+	id_stud smallint NOT NULL,
+	name_stud varchar (40) NOT NULL,
+	surname_stud varchar (40) NOT NULL,
+	group_id smallint NOT NULL
+);
+
+CREATE OR REPLACE FUNCTION build_audit()
+RETURNS TRIGGER AS $$
+BEGIN
+	IF TG_OP = 'INSERT' THEN
+		INSERT INTO audit
+		SELECT 'I', session_user, now(), nt.* FROM new_table nt;
+	ELSEIF TG_OP = 'DELETE' THEN
+		INSERT INTO audit
+		SELECT 'D', session_user, now(), nt.* FROM old_table nt;
+	END IF;
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER audit_ins AFTER INSERT ON students
+REFERENCING NEW TABLE AS new_table
+FOR EACH STATEMENT EXECUTE PROCEDURE build_audit();
+
+CREATE TRIGGER audit_del AFTER DELETE ON students
+REFERENCING OLD TABLE AS old_table
+FOR EACH STATEMENT EXECUTE PROCEDURE build_audit();
+
+
+

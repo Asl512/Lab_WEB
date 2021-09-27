@@ -1,0 +1,13 @@
+SELECT *, SUM(chol) OVER(PARTITION BY sex) as summa
+FROM tab_test
+ORDER BY sex
+
+-------------------------------------------------------------------
+
+SELECT *, SUM(chol) OVER(ORDER BY sex ROWS UNBOUNDED PRECEDING) as summa
+FROM tab_test
+
+-------------------------------------------------------------------
+
+SELECT *, SUM(chol) OVER(PARTITION BY sex ORDER BY sex ROWS UNBOUNDED PRECEDING) as summa
+FROM tab_test

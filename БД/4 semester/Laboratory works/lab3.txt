@@ -1,0 +1,46 @@
+Студенты по группам
+
+SELECT students.name, students.surname, groups.name 
+FROM students
+INNER JOIN groups ON students.fk_id_group = groups.id
+
+
+КОЛ-ВО студентов в группе
+
+SELECT groups.name, COUNT(students.name)
+FROM students
+INNER JOIN groups ON students.fk_id_group = groups.id
+GROUP BY groups.name
+
+КОЛ-ВО преподавателей на кафедре
+
+SELECT chair.name, COUNT(teacher.name)
+FROM teacher
+INNER JOIN chair ON teacher.fk_id_chair = chair.id
+GROUP BY chair.name
+
+
+Экзамены у студента
+
+SELECT students.name,students.surname, exam.name_exam
+FROM students
+INNER JOIN students_exam ON students.id = students_exam.fk_id_student
+INNER JOIN exam ON students_exam.fk_id_student = exam.id
+WHERE students.name LIKE 'Иван' AND students.surname LIKE 'Иванов'
+GROUP BY students.name, students.surname, exam.name_exam
+
+СРЕДНИЙ БАЛЛ студентов
+
+SELECT students.name, students.surname, SUM(students_exam.appraisal)/COUNT(students_exam.appraisal) AS average_rating
+FROM students
+INNER JOIN students_exam ON students.id = students_exam.fk_id_student
+GROUP BY students.name, students.surname
+
+
+Средний балл группы(три табл.)
+
+SELECT groups.name, SUM(students_exam.appraisal)/COUNT(students_exam.appraisal)
+FROM students
+INNER JOIN students_exam ON students.id = students_exam.fk_id_student
+INNER JOIN groups ON students.fk_id_group = groups.id
+GROUP BY groups.name

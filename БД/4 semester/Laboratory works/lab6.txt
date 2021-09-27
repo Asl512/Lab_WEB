@@ -1,0 +1,10 @@
+зачет, не зачет
+
+SELECT students.name, students.surname, SUM(students_exam.appraisal)/COUNT(students_exam.appraisal) AS average,
+CASE WHEN SUM(students_exam.appraisal)/COUNT(students_exam.appraisal) >= 4 THEN 'зачет'
+	ELSE 'не зачет'
+END AS status
+FROM students
+INNER JOIN students_exam ON students.id = students_exam.fk_id_student
+GROUP BY students.name, students.surname
+

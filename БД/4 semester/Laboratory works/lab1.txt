@@ -1,0 +1,41 @@
+КОЛ-ВО студентов в группе
+
+SELECT groups.name, count(students.name)
+FROM groups, students
+WHERE groups.id = students.fk_id_group
+GROUP BY groups.name
+
+
+КОЛ-ВО преподавателей на кафедре
+
+SELECT chair.name, count(teacher.name)
+FROM chair, teacher
+WHERE chair.id = teacher.fk_id_chair
+GROUP BY chair.name
+
+
+Экзамены у студента
+
+SELECT students.name,students.surname, exam.name_exam
+FROM exam, students, students_exam
+WHERE students.id = students_exam.fk_id_student AND exam.id = students_exam.fk_id_exam
+
+AND students.name LIKE '%Иван'
+
+
+СРЕДНИЙ БАЛЛ студентов
+
+SELECT students.name, students.surname, SUM(students_exam.appraisal)/COUNT(students_exam.appraisal) AS average_rating
+FROM students, students_exam
+WHERE students.id = students_exam.fk_id_student
+GROUP BY students.name, students.surname
+
+
+Средний балл группы
+
+SELECT groups.name, SUM(students_exam.appraisal)/COUNT(students_exam.appraisal)
+FROM students, students_exam, groups
+WHERE students.id = students_exam.fk_id_student AND students.fk_id_group = groups.id
+GROUP BY groups.name
+
+дата от и до

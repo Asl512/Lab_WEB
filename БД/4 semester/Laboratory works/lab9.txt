@@ -1,0 +1,31 @@
+CREATE OR REPLACE FUNCTION get_st(count_group int, OUT name_student varchar,OUT surname_student varchar)
+RETURNS SETOF RECORD AS $$
+SELECT name, surname
+FROM students
+WHERE id IN (SELECT students_exam.fk_id_student
+			 FROM students, students_exam
+			 WHERE students.id = students_exam.fk_id_student
+			 GROUP BY students_exam.fk_id_student
+			 HAVING SUM(students_exam.appraisal)/COUNT(students_exam.appraisal) = count_group)
+$$ LANGUAGE SQL;
+
+SELECT name_student, surname_student
+FROM get_st('4')
+
+------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION get_group(count_group int)
+RETURNS character AS $$
+SELECT name
+FROM groups
+WHERE id IN (
+			 SELECT count(students.name)
+			 FROM students, groups
+			 WHERE groups.id = students.fk_id_group
+			 GROUP BY groups.name
+			 HAVING COUNT(students.name) = count_group
+			)
+$$ LANGUAGE SQL;
+
+select *
+from get_group('3')

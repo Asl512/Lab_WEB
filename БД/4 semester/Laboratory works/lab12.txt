@@ -1,0 +1,23 @@
+Домены, Пользовательские (кастомные) типы данных
+
+CREATE DOMAIN true_for_fio AS varchar (200) NOT NULL CHECK (value SIMILAR TO '%(a|z)%')
+CREATE DOMAIN true_appraisals AS int NOT NULL CHECK (5 >= value) CHECK (value > 1)
+
+CREATE TYPE value_groups AS ENUM
+('ПИ','КБ','ИСиТ')
+
+SELECT enum_range(null::value_groups)
+
+CREATE TABLE test_domain
+(
+	id int,
+	name  true_for_fio,
+	surname  true_for_fio,
+	name_group value_groups,
+	appraisal  true_appraisals
+);
+
+INSERT INTO test_domain
+VALUES 
+(1, 'ivan', 'ivanov', 'ММ', 6),
+(2, 'mihail', 'mihailov', 'КБ', 1);

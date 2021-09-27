@@ -1,0 +1,39 @@
+Импорт данных
+https://www.kaggle.com/datasets
+
+psql db_connection_string
+
+
+CREATE TABLE tab_test
+(
+	age int,
+	sex integer,
+	cp integer,
+	trtbps integer,
+	chol integer,
+	fbs integer,
+	restecg integer,
+	thalachh integer,
+	exng integer,
+	oldpeak text,
+	slp integer,
+	caa integer,
+	thall integer,
+	output integer
+);
+
+COPY tab_test FROM 'C:\heart.csv' DELIMITER ',' CSV HEADER;
+
+
+SELECT * 
+FROM tab_test
+WHERE sex = 1
+AND age < 30
+
+SELECT * 
+FROM tab_test
+WHERE chol > 250
+AND age < 40
+
+
+

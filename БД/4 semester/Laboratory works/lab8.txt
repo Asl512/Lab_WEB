@@ -1,0 +1,73 @@
+CREATE OR REPLACE FUNCTION average_true(name_st varchar,surname_st varchar)
+RETURNS bigint AS $$
+DECLARE
+stud_i text;
+BEGIN
+FOR stud_i  IN
+(	
+	SELECT SUM(students_exam.appraisal)/COUNT(students_exam.appraisal)
+	FROM students, students_exam
+	WHERE students.id = students_exam.fk_id_student
+	AND students.name = name_st AND students.surname = surname_st
+	GROUP BY students.name, students.surname
+)
+LOOP
+RETURN stud_i;
+END LOOP;
+RAISE EXCEPTION 'Студент не найден';
+EXCEPTION
+WHEN SQLSTATE 'P0001' THEN
+RAISE EXCEPTION 'Студент % не найден.', name_st;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_teacher_exam_true(name_teacher varchar, surname_teacher varchar)
+RETURNS text AS $$
+DECLARE
+teacher_i text;
+BEGIN
+FOR teacher_i  IN
+(
+	SELECT exam.name_exam
+	FROM exam_teacher
+	INNER JOIN teacher ON exam_teacher.fk_id_exam = teacher.id
+	INNER JOIN exam ON exam_teacher.fk_id_student = exam.id
+	INNER JOIN chair ON teacher.fk_id_chair = chair.id
+	WHERE teacher.name = name_teacher
+	AND teacher.surname = surname_teacher
+)
+LOOP
+RETURN teacher_i;
+END LOOP;
+RAISE EXCEPTION 'Группа не найдена';
+EXCEPTION
+WHEN SQLSTATE 'P0001' THEN
+RAISE EXCEPTION 'Группа % не найдена.', name_teacher;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT get_teacher_exam_true('Николай','Борисов')
+
+
+
+CREATE OR REPLACE FUNCTION get_students_group_true(name_group varchar,OUT name_student varchar,OUT surname_student varchar)
+RETURNS SETOF RECORD AS $$
+DECLARE
+students_i text;
+BEGIN
+FOR students_i  IN
+(
+	SELECT students.name, students.surname
+	FROM students
+	INNER JOIN groups ON students.fk_id_group = groups.id
+	WHERE groups.name = name_group
+)
+LOOP
+RETURN NEXT;
+END LOOP;
+RAISE EXCEPTION 'Группа не найдена';
+EXCEPTION
+WHEN SQLSTATE 'P0001' THEN
+RAISE EXCEPTION 'Группа % не найдена.', name_group;
+END;
+$$ LANGUAGE plpgsql;

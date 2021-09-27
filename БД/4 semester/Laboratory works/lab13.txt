@@ -1,0 +1,14 @@
+Продвинутая группировка
+
+SELECT groups.name, COUNT(students.name)
+FROM students
+INNER JOIN groups ON students.fk_id_group = groups.id
+GROUP BY ROLLUP (groups.name)
+ORDER BY groups.name NULLS LAST
+
+SELECT students.name, students.surname, SUM(students_exam.appraisal)/COUNT(students_exam.appraisal) AS average_rating
+FROM students, students_exam
+WHERE students.id = students_exam.fk_id_student
+GROUP BY CUBE (students.name, students.surname)
+ORDER BY students.name, students.surname NULLS LAST
+
